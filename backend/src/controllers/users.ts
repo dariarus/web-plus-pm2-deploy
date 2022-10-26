@@ -75,13 +75,12 @@ const getUser = (req: Request, res: Response, next: NextFunction) => {
 
 // GET /users/me
 const getCurrentUser = (req: Request, res: Response, next: NextFunction) => {
-  getUserData(req['user']._id, res, next);
+  getUserData(req.user._id, res, next);
 };
 
 const updateUserData = (req: Request, res: Response, next: NextFunction) => {
-  const user = req['user'];
-  const { body } = req;
-  User.findByIdAndUpdate(user._id, body, { new: true, runValidators: true })
+  const { user: { _id }, body } = req;
+  User.findByIdAndUpdate(_id, body, { new: true, runValidators: true })
     .orFail(() => new NotFoundError('Пользователь по заданному id отсутствует в базе'))
     .then((user) => res.send({ data: user }))
     .catch(next);
