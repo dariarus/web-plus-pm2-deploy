@@ -19,7 +19,7 @@ module.exports = {
       repo: 'https://github.com/dariarus/web-plus-pm2-deploy',
       path: DEPLOY_PATH,
       ssh_options: 'StrictHostKeyChecking=no',
-      'pre-deploy-local': `scp -Cr ./build/* ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH} && scp ./.env* ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}`,
+      'pre-deploy-local': `scp ./.env* ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}`,
       'post-deploy': 'cd frontend && npm i && npm run build',
     },
   },
