@@ -8,5 +8,5 @@
 
 *Информация о сервере*:
 - IP адрес: 51.250.18.116
-- Frontend: https://mesto-dr.students.nomoredomains.icu/
-- Backend: https://api.mesto-dr.students.nomoredomains.icu/
+- Frontend: https://mesto-dr.students.nomoredomains.icu/ или http://mesto-dr.students.nomoredomains.icu/
+- Backend: https://api.mesto-dr.students.nomoredomains.icu/ или http://api.mesto-dr.students.nomoredomains.icu/
