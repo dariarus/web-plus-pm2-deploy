@@ -38,7 +38,6 @@ const userSchema = new mongoose.Schema<IUser, IUserModel, IUserMethods>({
     type: String,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     validate: {
-      // для проверки ссылок студентам необходимо написать регулярное выражение
       validator: (v: string) => urlRegExp.test(v),
       message: 'Поле "avatar" должно быть валидным url-адресом.',
     },
@@ -49,7 +48,6 @@ const userSchema = new mongoose.Schema<IUser, IUserModel, IUserMethods>({
     required: [true, 'Поле "email" должно быть заполнено'],
     unique: true, // поле email уникально (есть опция unique: true);
     validate: {
-      // для проверки email студенты используют validator
       validator: (v: string) => validator.isEmail(v),
       message: 'Поле "email" должно быть валидным email-адресом',
     },

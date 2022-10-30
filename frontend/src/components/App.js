@@ -14,7 +14,6 @@ import Register from "./Register";
 import Login from "./Login";
 import InfoTooltip from "./InfoTooltip";
 import ProtectedRoute from "./ProtectedRoute";
-import * as auth from "../utils/auth.js";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] =
@@ -25,39 +24,34 @@ function App() {
   const [selectedCard, setSelectedCard] = React.useState(null);
   const [cards, setCards] = React.useState([]);
 
-  // В корневом компоненте App создана стейт-переменная currentUser. Она используется в качестве значения для провайдера контекста.
+  
   const [currentUser, setCurrentUser] = React.useState({});
 
   const [isInfoToolTipOpen, setIsInfoToolTipOpen] = React.useState(false);
   const [tooltipStatus, setTooltipStatus] = React.useState("");
 
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
-  //В компоненты добавлены новые стейт-переменные: email — в компонент App
   const [email, setEmail] = React.useState("");
 
   const history = useHistory();
 
-  // Запрос к API за информацией о пользователе и массиве карточек выполняется единожды, при монтировании.
-  React.useEffect(() => {
-    api
-      .getAppInfo()
-      .then(([cardData, userData]) => {
-        setCurrentUser(userData);
-        setCards(cardData);
-      })
-      .catch((err) => console.log(err));
-  }, []);
 
-  // при монтировании App описан эффект, проверяющий наличие токена и его валидности
   React.useEffect(() => {
     const token = localStorage.getItem("jwt");
     if (token) {
-      auth
+      api
         .checkToken(token)
         .then((res) => {
-          setEmail(res.data.email);
+          console.log(res)
+          api.setToken(token);
+          setEmail(res.email);
           setIsLoggedIn(true);
-          history.push("/");
+          return api.getAppInfo()
+        })
+        .then(([cardData, userData]) => {
+            setCurrentUser(userData);
+            setCards(cardData);
+            history.push("/");
         })
         .catch((err) => {
           localStorage.removeItem("jwt");
@@ -66,6 +60,8 @@ function App() {
     }
   }, [history]);
 
+
+  
   function handleEditProfileClick() {
     setIsEditProfilePopupOpen(true);
   }
@@ -111,7 +107,7 @@ function App() {
   }
 
   function handleCardLike(card) {
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const isLiked = card.likes.some((i) => i === currentUser._id);
     api
       .changeLikeCardStatus(card._id, !isLiked)
       .then((newCard) => {
@@ -142,7 +138,7 @@ function App() {
   }
 
   function onRegister({ email, password }) {
-    auth
+    api
       .register(email, password)
       .then((res) => {
         setTooltipStatus("success");
@@ -156,7 +152,7 @@ function App() {
   }
 
   function onLogin({ email, password }) {
-    auth
+    api
       .login(email, password)
       .then((res) => {
         setIsLoggedIn(true);
@@ -170,15 +166,15 @@ function App() {
   }
 
   function onSignOut() {
-    // при вызове обработчика onSignOut происходит удаление jwt
+    
     localStorage.removeItem("jwt");
     setIsLoggedIn(false);
-    // После успешного вызова обработчика onSignOut происходит редирект на /signin
+    
     history.push("/signin");
   }
 
   return (
-    // В компонент App внедрён контекст через CurrentUserContext.Provider
+    
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page__content">
         <Header email={email} onSignOut={onSignOut} />

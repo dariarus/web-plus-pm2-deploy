@@ -4,7 +4,6 @@ import { Types } from 'mongoose';
 // eslint-disable-next-line no-useless-escape
 const urlRegExp = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:\/?#[\]@!$&'()*+,;=.]+$/;
 
-// валидация id
 const validateObjId = celebrate({
   params: Joi.object().keys({
     id: Joi.string().required().custom((value, helpers) => {
@@ -16,8 +15,6 @@ const validateObjId = celebrate({
   }),
 });
 
-// валидация карточки.
-// name и link - обязательные поля, name - от 2 до 30 символов, link - валидный url
 const validateCardBody = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30)
@@ -34,9 +31,6 @@ const validateCardBody = celebrate({
   }),
 });
 
-// валидация пользователя.
-// name, about и avatar - необязательные. name, about - от 2 до 30 символов, avatar - валидный url
-// password, email - обязательные, email - валидный email
 const validateUserBody = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30)
@@ -64,8 +58,6 @@ const validateUserBody = celebrate({
   }),
 });
 
-// валидация логина.
-// password, email - обязательные, email - валидный email
 const validateAuthentication = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email()
@@ -80,8 +72,6 @@ const validateAuthentication = celebrate({
   }),
 });
 
-// валидация аватарки.
-// avatar - обязательный, валидный url
 const validateAvatar = celebrate({
   body: {
     avatar: Joi.string().required().pattern(urlRegExp)
@@ -92,8 +82,6 @@ const validateAvatar = celebrate({
   },
 });
 
-// валидация профиля.
-// name, about - обязательные, от 2 до 30 символов
 const validateProfile = celebrate({
   body: {
     name: Joi.string().required().min(2).max(30)
